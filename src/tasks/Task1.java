@@ -4,9 +4,7 @@ import common.Person;
 import common.PersonService;
 import common.Task;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /*
@@ -21,7 +19,20 @@ public class Task1 implements Task {
   // !!! Редактируйте этот метод !!!
   private List<Person> findOrderedPersons(List<Integer> personIds) {
     Set<Person> persons = PersonService.findPersons(personIds);
-    return Collections.emptyList();
+    // храним ключ - Person_id, Person
+    // возможно можно создать map из set напрямую
+    Map<Integer, Person> help = new HashMap<>(persons.size());
+    // проходим по persons вынимаем id и Person, вставляем в help O(n)
+    for(Person person : persons) {
+      help.put(person.getId(), person);
+    }
+    // проходим по personIds находим нужный id в help, добавляем в лист ans
+    // проход O(n)
+    List<Person> ans = new ArrayList<>();
+    for(Integer id : personIds) {
+      ans.add(help.get(id));
+    }
+    return ans;
   }
 
   @Override
