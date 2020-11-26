@@ -10,6 +10,13 @@ import java.util.List;
 import java.util.Map;
 
 /*
+Задача 4
+Список персон класса Person необходимо сконвертировать в список ApiPersonDto
+(предположим, что это некоторый внешний формат)
+Конвертер для одной персоны уже предоставлен
+FYI - DTO = Data Transfer Object - распространенный паттерн, можно погуглить
+ */
+/*
 Задача 5
 Расширим предыдущую задачу
 Есть список персон, и словарь сопоставляющий id каждой персоны и id региона
@@ -20,7 +27,11 @@ public class Task5 implements Task {
 
   // !!! Редактируйте этот метод !!!
   private List<ApiPersonDto> convert(List<Person> persons, Map<Integer, Integer> personAreaIds) {
-    return new ArrayList<>();
+    List<ApiPersonDto> answer = new ArrayList<>();
+    for (Person person : persons) {
+      answer.add(convert(person, personAreaIds.get(person.getId())));
+    }
+    return answer;
   }
 
   private static ApiPersonDto convert(Person person, Integer areaId) {
