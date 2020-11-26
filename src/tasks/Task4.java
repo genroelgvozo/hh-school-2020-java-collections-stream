@@ -20,6 +20,7 @@ public class Task4 implements Task {
   // !!! Редактируйте этот метод !!!
   private List<ApiPersonDto> convert(List<Person> persons) {
     List<ApiPersonDto> answer = new ArrayList<>();
+    // проходимся по листу персон, и каждую персону, прогоняя через convert, добавляем в answer
     for (Person person : persons) {
       answer.add(convert(person));
     }

@@ -28,6 +28,8 @@ public class Task5 implements Task {
   // !!! Редактируйте этот метод !!!
   private List<ApiPersonDto> convert(List<Person> persons, Map<Integer, Integer> personAreaIds) {
     List<ApiPersonDto> answer = new ArrayList<>();
+    // проходимся по persons и каждую персону добавляем в answer, предварительно получая personAreaId из
+    // мапы personAreaId по personId
     for (Person person : persons) {
       answer.add(convert(person, personAreaIds.get(person.getId())));
     }
