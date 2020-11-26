@@ -38,19 +38,8 @@ public class Task8 implements Task {
 
     //Для фронтов выдадим полное имя, а то сами не могут
     public String convertPersonToString(Person person) {
-        String result = "";
-        if (person.getSecondName() != null) {
-            result += person.getSecondName();
-        }
-
-        if (person.getFirstName() != null) {
-            result += " " + person.getFirstName();
-        }
-
-        if (person.getSecondName() != null) {
-            result += " " + person.getSecondName();
-        }
-        return result;
+        // сделал через join
+        return String.join(" ", person.getSecondName(), person.getFirstName(), person.getSecondName());
     }
 
     // словарь id персоны -> ее имя
@@ -66,15 +55,8 @@ public class Task8 implements Task {
 
     // есть ли совпадающие в двух коллекциях персоны?
     public boolean hasSamePersons(Collection<Person> persons1, Collection<Person> persons2) {
-        boolean has = false;
-        for (Person person1 : persons1) {
-            for (Person person2 : persons2) {
-                if (person1.equals(person2)) {
-                    has = true;
-                }
-            }
-        }
-        return has;
+        // возвращает true если persons1 изменилась
+        return persons1.retainAll(persons2);
     }
 
     //...
