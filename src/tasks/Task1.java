@@ -21,8 +21,12 @@ public class Task1 implements Task {
   // !!! Редактируйте этот метод !!!
   private List<Person> findOrderedPersons(List<Integer> personIds) {
     Set<Person> persons = PersonService.findPersons(personIds);
-    return Collections.emptyList();
-  }
+    return persons.stream()
+            .sorted((person1, person2) -> personIds.indexOf(person1.getId()
+                    .compareTo(personIds.indexOf(person2.getId()))))
+            .collect(Collectors.toList());
+  }/*Алгоритм зависит от количества id персон в множестве persons, соответственно O(n).
+  Алгоритм: из множества persons создается stream, который последовательно сравнивает id персон по их индексу в массиве personIds*/
 
   @Override
   public boolean check() {

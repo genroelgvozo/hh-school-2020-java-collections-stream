@@ -6,7 +6,9 @@ import common.Task;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /*
 Задача 3
@@ -16,8 +18,13 @@ public class Task3 implements Task {
 
   // !!! Редактируйте этот метод !!!
   private List<Person> sort(Collection<Person> persons) {
-    return new ArrayList<>(persons);
-  }
+    return persons.stream()
+            .sorted(Comparator.comparing(Person::getCreatedAt))
+            .sorted(Comparator.comparing(Person::getFirstName))
+            .sorted(Comparator.comparing(Person::getSecondName))
+            .collect(Collectors.toList());
+
+  }//возможно, не самый оптимальный по времени выполнения способ, однако очень простой в плане реализации
 
   @Override
   public boolean check() {

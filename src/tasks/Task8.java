@@ -3,12 +3,7 @@ package tasks;
 import common.Person;
 import common.Task;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -23,73 +18,52 @@ P.P.S Здесь ваши правки желательно прокоммент
  */
 public class Task8 implements Task {
 
-  private long count;
-
   //Не хотим выдывать апи нашу фальшивую персону, поэтому конвертим начиная со второй
   public List<String> getNames(List<Person> persons) {
-    if (persons.size() == 0) {
-      return Collections.emptyList();
-    }
-    persons.remove(0);
-    return persons.stream().map(Person::getFirstName).collect(Collectors.toList());
-  }
+    return persons.stream()
+            .skip(1)
+            .map(Person::getFirstName)
+            .collect(Collectors.toList());
+  }/*нет смысла проверять лист на пустоту, или удалять из него персону под нулевым индексом, можно собрать в поток и просто пропустить.
+  если лист пустой, то и поток будет пустым, а метод вернет пустой список*/
 
   //ну и различные имена тоже хочется
   public Set<String> getDifferentNames(List<Person> persons) {
-    return getNames(persons).stream().distinct().collect(Collectors.toSet());
-  }
+    return new HashSet<>(getNames(persons));
+  }//если нам нужен набор имен различных,не имеет смысла собирать стрим, можно сделать HashSet из List<Person> использовав метод getNames
 
   //Для фронтов выдадим полное имя, а то сами не могут
   public String convertPersonToString(Person person) {
-    String result = "";
-    if (person.getSecondName() != null) {
-      result += person.getSecondName();
-    }
-
-    if (person.getFirstName() != null) {
-      result += " " + person.getFirstName();
-    }
-
-    if (person.getSecondName() != null) {
-      result += " " + person.getSecondName();
-    }
-    return result;
-  }
+    return Stream.of(person.getSecondName(),person.getFirstName(),person.getMiddleName()) //порядок: ФИО
+            .filter(Objects::nonNull)
+            .collect(Collectors.joining(" "));
+  }//если мы не обрабатываем ошибку, когда у нас не указано что-либо из ФИО, предполагая, что поступившие данные корректны, тогда можно стримом через joining
 
   // словарь id персоны -> ее имя
   public Map<Integer, String> getPersonNames(Collection<Person> persons) {
     Map<Integer, String> map = new HashMap<>(1);
-    for (Person person : persons) {
-      if (!map.containsKey(person.getId())) {
-        map.put(person.getId(), convertPersonToString(person));
-      }
-    }
+    persons.stream()
+            .filter(person -> !map.containsKey(person.getId()))
+            .forEach(person -> map.put(person.getId(),
+                    convertPersonToString(person)));
     return map;
-  }
+  }//можно и расширенным for( он же foreach), но стримами код удобнее выглядит
 
   // есть ли совпадающие в двух коллекциях персоны?
   public boolean hasSamePersons(Collection<Person> persons1, Collection<Person> persons2) {
-    boolean has = false;
-    for (Person person1 : persons1) {
-      for (Person person2 : persons2) {
-        if (person1.equals(person2)) {
-          has = true;
-        }
-      }
-    }
-    return has;
-  }
+    return persons1.stream().anyMatch(persons2::contains);
+  }//так проще)
 
   //...
   public long countEven(Stream<Integer> numbers) {
-    count = 0;
-    numbers.filter(num -> num % 2 == 0).forEach(num -> count++);
-    return count;
-  }
+    return numbers.filter(num -> num % 2 == 0).count();
+  }//глобальная переменная count не нужна
 
   @Override
   public boolean check() {
     System.out.println("Слабо дойти до сюда и исправить Fail этой таски?");
+    /*Здесь же просто одну из переменных на true поменять -  выдаст Success
+    так понимаю, что это оценка будет нам за Task8*/
     boolean codeSmellsGood = false;
     boolean reviewerDrunk = false;
     return codeSmellsGood || reviewerDrunk;
