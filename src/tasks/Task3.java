@@ -6,7 +6,9 @@ import common.Task;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /*
 Задача 3
@@ -14,10 +16,21 @@ import java.util.List;
  */
 public class Task3 implements Task {
 
-  // !!! Редактируйте этот метод !!!
+  /*
+  Сортировка наверное O (n * log n)
+  Собрать в массив O(n).
+  Итого: O (n * log(n))
+   */
   private List<Person> sort(Collection<Person> persons) {
-    return new ArrayList<>(persons);
+    List<Person> sortedPerson = persons.stream()
+            .sorted(Comparator.comparing(Person::getSecondName)
+                    .thenComparing(Person::getFirstName)
+                    .thenComparing(Person::getCreatedAt))
+            .collect(Collectors.toList());
+    return sortedPerson;
   }
+
+
 
   @Override
   public boolean check() {
