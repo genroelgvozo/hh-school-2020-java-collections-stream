@@ -4,9 +4,8 @@ import common.Person;
 import common.PersonService;
 import common.Task;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /*
@@ -16,12 +15,24 @@ import java.util.stream.Collectors;
 нужно их отсортировать в том же порядке, что и переданные id.
 Оценить асимпотику работы
  */
+
 public class Task1 implements Task {
 
-  // !!! Редактируйте этот метод !!!
+  /*
+  Циклом прохожусь по Set<Person> для создания карты - O(n)
+  Затем еще раз циклом прохожусь по List<Integer> id для получения
+  сортированного значения. С учетом хэша, получатеся O(n).
+  Итого: O(n) + O(n) = O(n)
+   */
   private List<Person> findOrderedPersons(List<Integer> personIds) {
     Set<Person> persons = PersonService.findPersons(personIds);
-    return Collections.emptyList();
+    Map<Integer, Object> numberedPersons = new HashMap<>();
+    for (Person elem : persons)
+      numberedPersons.put(elem.getId(), elem);
+    List<Person> sortedPersons = new LinkedList<>();
+    for (Integer id : personIds)
+      sortedPersons.add((Person) numberedPersons.get(id));
+    return sortedPersons;
   }
 
   @Override

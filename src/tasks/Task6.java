@@ -5,25 +5,40 @@ import common.Person;
 import common.Task;
 
 import java.time.Instant;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /*
 Имеются
 - коллекция персон Collection<Person>
 - словарь Map<Integer, Set<Integer>>, сопоставляющий каждой персоне множество id регионов
 - коллекция всех регионов Collection<Area>
-На выходе хочется получить множество строк вида "Имя - регион". Если у персон регионов несколько, таких строк так же будет несколько
+На выходе хочется получить множество строк вида "Имя - регион".
+Если у персон регионов несколько, таких строк так же будет несколько
  */
 public class Task6 implements Task {
 
-  private Set<String> getPersonDescriptions(Collection<Person> persons,
+  private Set<? extends Object> getPersonDescriptions(Collection<Person> persons,
                                             Map<Integer, Set<Integer>> personAreaIds,
                                             Collection<Area> areas) {
-    return new HashSet<>();
+
+    Map<Integer, String> areasConv = areas.stream().collect(Collectors.toMap(Area::getId, Area::getName));
+
+    Set<String> personsAndAreas = new HashSet<>();
+
+    for (Person person : persons) {
+      Integer personId = person.getId();
+      for (Integer areaId : personAreaIds.get(personId)) {
+        personsAndAreas.add(
+                Stream.of(person.getFirstName(), areasConv.get(areaId))
+                .collect(Collectors.joining(" - ")));
+      }
+    }
+
+    return personsAndAreas;
+
   }
 
   @Override

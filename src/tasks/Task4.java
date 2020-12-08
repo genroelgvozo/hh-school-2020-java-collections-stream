@@ -7,6 +7,7 @@ import common.Task;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /*
 Задача 4
@@ -17,9 +18,10 @@ FYI - DTO = Data Transfer Object - распространенный паттер
  */
 public class Task4 implements Task {
 
-  // !!! Редактируйте этот метод !!!
+  // Проходим по всем элементам, поэтому O (n)
   private List<ApiPersonDto> convert(List<Person> persons) {
-    return new ArrayList<>();
+    List<ApiPersonDto> apiPersonConv = persons.stream().map(Task4::convert).collect(Collectors.toList());
+    return apiPersonConv;
   }
 
   private static ApiPersonDto convert(Person person) {
