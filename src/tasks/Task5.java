@@ -8,7 +8,15 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+/*
+Задача 4
+Список персон класса Person необходимо сконвертировать в список ApiPersonDto
+(предположим, что это некоторый внешний формат)
+Конвертер для одной персоны уже предоставлен
+FYI - DTO = Data Transfer Object - распространенный паттерн, можно погуглить
+ */
 /*
 Задача 5
 Расширим предыдущую задачу
@@ -19,8 +27,11 @@ import java.util.Map;
 public class Task5 implements Task {
 
   // !!! Редактируйте этот метод !!!
+  // точно также как и в предыдущей с добавлением map
   private List<ApiPersonDto> convert(List<Person> persons, Map<Integer, Integer> personAreaIds) {
-    return new ArrayList<>();
+
+    return persons.stream().map(person -> convert(person, personAreaIds.get(person.getId())))
+            .collect(Collectors.toList());
   }
 
   private static ApiPersonDto convert(Person person, Integer areaId) {

@@ -4,9 +4,7 @@ import common.Person;
 import common.PersonService;
 import common.Task;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /*
@@ -19,9 +17,12 @@ import java.util.stream.Collectors;
 public class Task1 implements Task {
 
   // !!! Редактируйте этот метод !!!
+  // Теперь использую стримы
   private List<Person> findOrderedPersons(List<Integer> personIds) {
     Set<Person> persons = PersonService.findPersons(personIds);
-    return Collections.emptyList();
+    // храним ключ - Person_id, Person
+    Map<Integer, Person> personMap = persons.stream().collect(Collectors.toMap(Person::getId, person -> person));
+    return personIds.stream().map(personMap::get).collect(Collectors.toList());
   }
 
   @Override

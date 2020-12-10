@@ -4,11 +4,9 @@ import common.Person;
 import common.Task;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /*
 Задача 2
@@ -22,7 +20,18 @@ public class Task2 implements Task {
   private static List<Person> combineAndSortWithLimit(Collection<Person> persons1,
                                                       Collection<Person> persons2,
                                                       int limit) {
-    return new ArrayList<>();
+    // делаем стрим из коллекций
+    Stream<Person> stream1 = persons1.stream();
+    Stream<Person> stream2 = persons2.stream();
+    // concat - объединяем col1 и col2
+    // sorted - сортируем
+    // limit - выбор первых нескольких элементов
+    // collect - приводим к классу list
+    return Stream
+            .concat(stream1, stream2)
+            .sorted(Comparator.comparing(Person::getCreatedAt))
+            .limit(limit)
+            .collect(Collectors.toList());
   }
 
   @Override
