@@ -17,22 +17,12 @@ import java.util.stream.Collectors;
 public class Task1 implements Task {
 
   // !!! Редактируйте этот метод !!!
+  // Теперь использую стримы
   private List<Person> findOrderedPersons(List<Integer> personIds) {
     Set<Person> persons = PersonService.findPersons(personIds);
     // храним ключ - Person_id, Person
-    // возможно можно создать map из set напрямую
-    Map<Integer, Person> help = new HashMap<>(persons.size());
-    // проходим по persons вынимаем id и Person, вставляем в help O(n)
-    for(Person person : persons) {
-      help.put(person.getId(), person);
-    }
-    // проходим по personIds находим нужный id в help, добавляем в лист ans
-    // проход O(n)
-    List<Person> ans = new ArrayList<>();
-    for(Integer id : personIds) {
-      ans.add(help.get(id));
-    }
-    return ans;
+    Map<Integer, Person> personMap = persons.stream().collect(Collectors.toMap(Person::getId, person -> person));
+    return personIds.stream().map(personMap::get).collect(Collectors.toList());
   }
 
   @Override

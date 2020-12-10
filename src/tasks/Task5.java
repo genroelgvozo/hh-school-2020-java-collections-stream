@@ -8,6 +8,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /*
 Задача 4
@@ -26,14 +27,11 @@ FYI - DTO = Data Transfer Object - распространенный паттер
 public class Task5 implements Task {
 
   // !!! Редактируйте этот метод !!!
+  // точно также как и в предыдущей с добавлением map
   private List<ApiPersonDto> convert(List<Person> persons, Map<Integer, Integer> personAreaIds) {
-    List<ApiPersonDto> answer = new ArrayList<>();
-    // проходимся по persons и каждую персону добавляем в answer, предварительно получая personAreaId из
-    // мапы personAreaId по personId
-    for (Person person : persons) {
-      answer.add(convert(person, personAreaIds.get(person.getId())));
-    }
-    return answer;
+
+    return persons.stream().map(person -> convert(person, personAreaIds.get(person.getId())))
+            .collect(Collectors.toList());
   }
 
   private static ApiPersonDto convert(Person person, Integer areaId) {

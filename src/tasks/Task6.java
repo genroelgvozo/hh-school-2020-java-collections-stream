@@ -6,6 +6,7 @@ import common.Task;
 
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /*
 Имеются
@@ -16,24 +17,18 @@ import java.util.*;
  */
 public class Task6 implements Task {
 
+    // изучил что такое flatMap, избавился от лишней мапы,
     private Set<String> getPersonDescriptions(Collection<Person> persons,
                                               Map<Integer, Set<Integer>> personAreaIds,
                                               Collection<Area> areas) {
-        Map<Integer, String> areasIds = new HashMap<>();
-        for (Area area : areas) {
-            areasIds.put(area.getId(), area.getName());
-        }
-        Map<Integer, String> personIds = new HashMap<>();
-        for (Person person: persons) {
-            personIds.put(person.getId(), person.getFirstName());
-        }
-        Set<String> answer = new HashSet<>();
-        for (Map.Entry<Integer, Set<Integer>> entry: personAreaIds.entrySet()) {
-            for (Integer AreaId : entry.getValue()) {
-                answer.add(personIds.get(entry.getKey()) + " - " + areasIds.get(AreaId));
-            }
-        }
-        return answer;
+        Map<Integer, Area> areaNameMap = areas.stream().collect(Collectors.toMap(Area::getId, area -> area));
+
+        return persons.stream()
+                .flatMap(
+                        person -> personAreaIds.get(person.getId())
+                        .stream()
+                        .map(areaId -> (person.getFirstName() + " - " + areaNameMap.get(areaId).getName()))
+                ).collect(Collectors.toSet());
     }
 
     @Override

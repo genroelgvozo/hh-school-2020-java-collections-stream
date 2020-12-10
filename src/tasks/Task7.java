@@ -5,25 +5,20 @@ import common.Task;
 import common.Vacancy;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /*
 Из коллекции компаний необходимо получить всевозможные различные названия вакансий
  */
 public class Task7 implements Task {
 
+    // использую стримы
     private Set<String> vacancyNames(Collection<Company> companies) {
-        // переводим в лист для более понятной итерации
-        List<Company> help = new ArrayList<>(companies);
-        // сет в который буду добавлять ответы
-        Set<String> answer = new HashSet<>();
-        // проходим по компаниям
-        for (Company company : companies) {
-            // по вакансиям. Проверку на уникальность отдельно делать не нужно т.к это сет
-            for (Vacancy vacancy: company.getVacancies()) {
-                answer.add(vacancy.getTitle());
-            }
-        }
-        return answer;
+
+        return companies.stream().
+                flatMap(company -> company.getVacancies().stream()
+                        .map(Vacancy::getTitle))
+                .collect(Collectors.toSet());
     }
 
     @Override

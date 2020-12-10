@@ -22,17 +22,13 @@ public class Task8 implements Task {
 
     //Не хотим выдывать апи нашу фальшивую персону, поэтому конвертим начиная со второй
     public List<String> getNames(List<Person> persons) {
-        // приминил специальную функцию для проверки на пустоту
-        if (persons.isEmpty()) {
-            return Collections.emptyList();
-        }
         // добавил пропуск первого элемента
         return persons.stream().skip(1).map(Person::getFirstName).collect(Collectors.toList());
     }
 
     //ну и различные имена тоже хочется
     public Set<String> getDifferentNames(List<Person> persons) {
-        // упростил составление нового сета, приминил прошлую функцию чтоб удолитворяло требованиям
+        // упростил составление нового сета, приминил прошлую функцию чтоб удолЕтворяло требованиям
         return new HashSet<>(getNames(persons));
     }
 
@@ -40,23 +36,20 @@ public class Task8 implements Task {
     public String convertPersonToString(Person person) {
         // сделал через join
         return String.join(" ", person.getSecondName(), person.getFirstName(), person.getSecondName());
+
     }
 
     // словарь id персоны -> ее имя
     public Map<Integer, String> getPersonNames(Collection<Person> persons) {
-        Map<Integer, String> map = new HashMap<>(1);
-        for (Person person : persons) {
-            if (!map.containsKey(person.getId())) {
-                map.put(person.getId(), convertPersonToString(person));
-            }
-        }
-        return map;
+        return persons.stream()
+                .collect(Collectors.toMap(Person::getId, this::convertPersonToString));
     }
 
     // есть ли совпадающие в двух коллекциях персоны?
     public boolean hasSamePersons(Collection<Person> persons1, Collection<Person> persons2) {
         // возвращает true если persons1 изменилась
-        return persons1.retainAll(persons2);
+        //return persons1.retainAll(persons2);
+        return Collections.disjoint(persons1, persons2);
     }
 
     //...

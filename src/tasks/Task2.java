@@ -21,13 +21,14 @@ public class Task2 implements Task {
                                                       Collection<Person> persons2,
                                                       int limit) {
     // делаем стрим из коллекций
-    Stream<Person> col1 = persons1.stream();
-    Stream<Person> col2 = persons2.stream();
+    Stream<Person> stream1 = persons1.stream();
+    Stream<Person> stream2 = persons2.stream();
     // concat - объединяем col1 и col2
     // sorted - сортируем
     // limit - выбор первых нескольких элементов
     // collect - приводим к классу list
-    return Stream.concat(col1, col2)
+    return Stream
+            .concat(stream1, stream2)
             .sorted(Comparator.comparing(Person::getCreatedAt))
             .limit(limit)
             .collect(Collectors.toList());
