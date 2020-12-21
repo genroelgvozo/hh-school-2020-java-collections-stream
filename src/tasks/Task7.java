@@ -5,16 +5,24 @@ import common.Task;
 import common.Vacancy;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /*
 Из коллекции компаний необходимо получить всевозможные различные названия вакансий
  */
 public class Task7 implements Task {
 
+  // Ну тут а изучение flatMap, посмотреть что можно вообще без лямбд сделать вот так, аля ФП
+  // + вспомнить что не надо distinct делать)
+  // Кто-то делал два цикла - напоминаю, стримы не являются обязательным чем-то, естественно имеют права на жизнь оба подхода
+  // Но вот кажется что такое читать и два вложенных цикла - разное по удобству) Иногда без цикла не обойтись разумеется
   private Set<String> vacancyNames(Collection<Company> companies) {
-    return new HashSet<>();
+    return companies.stream()
+        .map(Company::getVacancies)
+        .flatMap(Collection::stream)
+        .map(Vacancy::getTitle)
+        .collect(Collectors.toSet());
   }
 
   @Override
