@@ -6,10 +6,10 @@ import common.Task;
 
 import java.time.Instant;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /*
 Имеются
@@ -20,10 +20,20 @@ import java.util.Set;
  */
 public class Task6 implements Task {
 
+  // Самая сложная (в алгоритмическом плане) задача
+  // Были разные решения, частенько видел перебор для каждой персоны всех ареек, что ведет к O(nm) асимптотике
+  // Данное решение ведет себя как O(s), где s - кол-во результирующих строк, грубо говоря кол-во всех связей персоны с арейками, что быстрее
+  // Такая задача часто встречается, правда не всегда в такой сложной форме, но грубо говоря это обычное дело, когда разные данные приходят с разных источников, а связи между ними в третьих
+  // И это надо все как-то сконвертировать в дто/объект/строку и отдать на фронт для отрисовки, или обработать для составления отчета/аналитики/чего-нибудь
   private Set<String> getPersonDescriptions(Collection<Person> persons,
                                             Map<Integer, Set<Integer>> personAreaIds,
                                             Collection<Area> areas) {
-    return new HashSet<>();
+    Map<Integer, String> areaNames = areas.stream()
+        .collect(Collectors.toMap(Area::getId, Area::getName));
+    return persons.stream()
+        .flatMap(person -> personAreaIds.get(person.getId()).stream()
+            .map(areaId -> String.format("%s %s", person.getFirstName(), areaNames.get(areaId))))  // разумеется можно и стрингбилдер, здесь уже на вкус
+        .collect(Collectors.toSet());
   }
 
   @Override
